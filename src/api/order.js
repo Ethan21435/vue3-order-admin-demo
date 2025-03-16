@@ -1,14 +1,14 @@
 import axios from 'axios'
 
-const api = axios.create({
+const instance = axios.create({
   baseURL: '/api',
   timeout: 5000
 })
 
 // 请求拦截器
-api.interceptors.request.use(
+instance.interceptors.request.use(
   config => {
-    // 可以在这里添加token等认证信息
+    // 在这里可以添加认证信息等
     return config
   },
   error => {
@@ -17,27 +17,25 @@ api.interceptors.request.use(
 )
 
 // 响应拦截器
-api.interceptors.response.use(
+instance.interceptors.response.use(
   response => {
-    const { code, data, message } = response.data
+    const { code, message, data } = response.data
     if (code === 200) {
-      return data
+      return { data }
     }
-    ElMessage.error(message || '请求失败')
     return Promise.reject(new Error(message || '请求失败'))
   },
   error => {
-    ElMessage.error(error.message || '请求失败')
     return Promise.reject(error)
   }
 )
 
+// 获取订单列表
 export const getOrders = (params) => {
-  return api.post('/orders', params)
+  return instance.post('/orders', params)
 }
 
+// 获取订单统计数据
 export const getOrderStats = () => {
-  return api.get('/orders/stats')
+  return instance.get('/orders/stats')
 }
-
-export default api
