@@ -12,11 +12,16 @@
     "vue-router": "^4.2.0",
     "pinia": "^2.1.0",
     "element-plus": "^2.3.0",
-    "axios": "^1.4.0"
+    "axios": "^1.4.0",
+    "echarts": "^5.4.0",
+    "file-saver": "^2.0.5",
+    "xlsx": "^0.18.5",
+    "@vueuse/core": "^10.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.0",
     "vite": "^4.3.0",
-    "sass": "^1.62.0"
+    "sass": "^1.62.0",
+    "mockjs": "^1.1.0"
   }
 }
