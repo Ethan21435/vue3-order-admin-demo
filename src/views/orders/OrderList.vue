@@ -1,84 +1,84 @@
-&lt;template&gt;
-  &lt;div class="order-list"&gt;
-    &lt;el-card class="search-card"&gt;
-      &lt;el-form :model="searchForm" :inline="true"&gt;
-        &lt;el-form-item label="订单号"&gt;
-          &lt;el-input v-model="searchForm.orderNo" placeholder="请输入订单号" clearable /&gt;
-        &lt;/el-form-item&gt;
-        &lt;el-form-item label="订单状态"&gt;
-          &lt;el-select v-model="searchForm.status" placeholder="请选择状态" clearable&gt;
-            &lt;el-option label="待付款" value="pending" /&gt;
-            &lt;el-option label="已付款" value="paid" /&gt;
-            &lt;el-option label="已发货" value="shipped" /&gt;
-            &lt;el-option label="已完成" value="completed" /&gt;
-          &lt;/el-select&gt;
-        &lt;/el-form-item&gt;
-        &lt;el-form-item label="下单时间"&gt;
-          &lt;el-date-picker
+<template>
+  <div class="order-list">
+    <el-card class="search-card">
+      <el-form :model="searchForm" :inline="true">
+        <el-form-item label="订单号">
+          <el-input v-model="searchForm.orderNo" placeholder="请输入订单号" clearable />
+        </el-form-item>
+        <el-form-item label="订单状态">
+          <el-select v-model="searchForm.status" placeholder="请选择状态" clearable>
+            <el-option label="待付款" value="pending" />
+            <el-option label="已付款" value="paid" />
+            <el-option label="已发货" value="shipped" />
+            <el-option label="已完成" value="completed" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="下单时间">
+          <el-date-picker
             v-model="searchForm.dateRange"
             type="daterange"
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             value-format="YYYY-MM-DD"
-          /&gt;
-        &lt;/el-form-item&gt;
-        &lt;el-form-item&gt;
-          &lt;el-button type="primary" @click="handleSearch"&gt;搜索&lt;/el-button&gt;
-          &lt;el-button @click="resetSearch"&gt;重置&lt;/el-button&gt;
-        &lt;/el-form-item&gt;
-      &lt;/el-form&gt;
-    &lt;/el-card&gt;
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="handleSearch">搜索</el-button>
+          <el-button @click="resetSearch">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
 
-    &lt;el-card class="table-card"&gt;
-      &lt;template #header&gt;
-        &lt;div class="card-header"&gt;
-          &lt;span&gt;订单列表&lt;/span&gt;
-          &lt;div class="header-operations"&gt;
-            &lt;el-button type="primary" @click="handleExport"&gt;导出订单&lt;/el-button&gt;
-            &lt;el-button type="danger" :disabled="!selectedOrders.length" @click="handleBatchDelete"&gt;
+    <el-card class="table-card">
+      <template #header>
+        <div class="card-header">
+          <span>订单列表</span>
+          <div class="header-operations">
+            <el-button type="primary" @click="handleExport">导出订单</el-button>
+            <el-button type="danger" :disabled="!selectedOrders.length" @click="handleBatchDelete">
               批量删除
-            &lt;/el-button&gt;
-          &lt;/div&gt;
-        &lt;/div&gt;
-      &lt;/template&gt;
+            </el-button>
+          </div>
+        </div>
+      </template>
 
-      &lt;el-table
+      <el-table
         v-loading="loading"
         :data="orderList"
         @selection-change="handleSelectionChange"
-      &gt;
-        &lt;el-table-column type="selection" width="55" /&gt;
-        &lt;el-table-column prop="orderNo" label="订单号" width="180" /&gt;
-        &lt;el-table-column prop="customerName" label="客户名称" width="120" /&gt;
-        &lt;el-table-column prop="phone" label="联系电话" width="120" /&gt;
-        &lt;el-table-column prop="amount" label="订单金额" width="120"&gt;
-          &lt;template #default="{ row }"&gt;
+      >
+        <el-table-column type="selection" width="55" />
+        <el-table-column prop="orderNo" label="订单号" width="180" />
+        <el-table-column prop="customerName" label="客户名称" width="120" />
+        <el-table-column prop="phone" label="联系电话" width="120" />
+        <el-table-column prop="amount" label="订单金额" width="120">
+          <template #default="{ row }">
             ¥{{ row.amount.toFixed(2) }}
-          &lt;/template&gt;
-        &lt;/el-table-column&gt;
-        &lt;el-table-column prop="status" label="状态" width="100"&gt;
-          &lt;template #default="{ row }"&gt;
-            &lt;el-tag :type="getStatusType(row.status)"&gt;
+          </template>
+        </el-table-column>
+        <el-table-column prop="status" label="状态" width="100">
+          <template #default="{ row }">
+            <el-tag :type="getStatusType(row.status)">
               {{ getStatusText(row.status) }}
-            &lt;/el-tag&gt;
-          &lt;/template&gt;
-        &lt;/el-table-column&gt;
-        &lt;el-table-column prop="createTime" label="创建时间" width="180"&gt;
-          &lt;template #default="{ row }"&gt;
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createTime" label="创建时间" width="180">
+          <template #default="{ row }">
             {{ formatDateTime(row.createTime) }}
-          &lt;/template&gt;
-        &lt;/el-table-column&gt;
-        &lt;el-table-column label="操作" fixed="right" width="150"&gt;
-          &lt;template #default="{ row }"&gt;
-            &lt;el-button link type="primary" @click="viewDetail(row.id)"&gt;查看&lt;/el-button&gt;
-            &lt;el-button link type="danger" @click="handleDelete(row)"&gt;删除&lt;/el-button&gt;
-          &lt;/template&gt;
-        &lt;/el-table-column&gt;
-      &lt;/el-table&gt;
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" fixed="right" width="150">
+          <template #default="{ row }">
+            <el-button link type="primary" @click="viewDetail(row.id)">查看</el-button>
+            <el-button link type="danger" @click="handleDelete(row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-      &lt;div class="pagination"&gt;
-        &lt;el-pagination
+      <div class="pagination">
+        <el-pagination
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
           :total="total"
@@ -86,13 +86,13 @@
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-        /&gt;
-      &lt;/div&gt;
-    &lt;/el-card&gt;
-  &lt;/div&gt;
-&lt;/template&gt;
+        />
+      </div>
+    </el-card>
+  </div>
+</template>
 
-&lt;script setup&gt;
+<script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -235,9 +235,9 @@ const handleBatchDelete = () => {
 onMounted(() => {
   loadOrders()
 })
-&lt;/script&gt;
+</script>
 
-&lt;style scoped&gt;
+<style scoped>
 .order-list {
   padding: 20px;
 }
@@ -262,4 +262,4 @@ onMounted(() => {
   display: flex;
   justify-content: flex-end;
 }
-&lt;/style&gt;
+</style>
