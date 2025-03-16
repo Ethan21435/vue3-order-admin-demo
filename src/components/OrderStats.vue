@@ -1,38 +1,38 @@
-&lt;template&gt;
-  &lt;div class="order-stats"&gt;
-    &lt;el-row :gutter="20"&gt;
-      &lt;el-col :span="6" v-for="(stat, index) in stats" :key="index"&gt;
-        &lt;el-card class="stat-card" :body-style="{ padding: '20px' }"&gt;
-          &lt;div class="stat-content"&gt;
-            &lt;div class="stat-value"&gt;{{ stat.value }}&lt;/div&gt;
-            &lt;div class="stat-label"&gt;{{ stat.label }}&lt;/div&gt;
-          &lt;/div&gt;
-        &lt;/el-card&gt;
-      &lt;/el-col&gt;
-    &lt;/el-row&gt;
+<template>
+  <div class="order-stats">
+    <el-row :gutter="20">
+      <el-col :span="6" v-for="(stat, index) in stats" :key="index">
+        <el-card class="stat-card" :body-style="{ padding: '20px' }">
+          <div class="stat-content">
+            <div class="stat-value">{{ stat.value }}</div>
+            <div class="stat-label">{{ stat.label }}</div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
 
-    &lt;el-row :gutter="20" class="charts-row"&gt;
-      &lt;el-col :span="12"&gt;
-        &lt;el-card&gt;
-          &lt;template #header&gt;
-            &lt;div class="card-header"&gt;订单状态分布&lt;/div&gt;
-          &lt;/template&gt;
-          &lt;div ref="pieChartRef" class="chart-container"&gt;&lt;/div&gt;
-        &lt;/el-card&gt;
-      &lt;/el-col&gt;
-      &lt;el-col :span="12"&gt;
-        &lt;el-card&gt;
-          &lt;template #header&gt;
-            &lt;div class="card-header"&gt;近期订单趋势&lt;/div&gt;
-          &lt;/template&gt;
-          &lt;div ref="lineChartRef" class="chart-container"&gt;&lt;/div&gt;
-        &lt;/el-card&gt;
-      &lt;/el-col&gt;
-    &lt;/el-row&gt;
-  &lt;/div&gt;
-&lt;/template&gt;
+    <el-row :gutter="20" class="charts-row">
+      <el-col :span="12">
+        <el-card>
+          <template #header>
+            <div class="card-header">订单状态分布</div>
+          </template>
+          <div ref="pieChartRef" class="chart-container"></div>
+        </el-card>
+      </el-col>
+      <el-col :span="12">
+        <el-card>
+          <template #header>
+            <div class="card-header">近期订单趋势</div>
+          </template>
+          <div ref="lineChartRef" class="chart-container"></div>
+        </el-card>
+      </el-col>
+    </el-row>
+  </div>
+</template>
 
-&lt;script setup&gt;
+<script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import * as echarts from 'echarts'
 import { getOrderStats } from '@/api/order'
@@ -161,9 +161,9 @@ onUnmounted(() => {
   lineChart?.dispose()
   window.removeEventListener('resize', handleResize)
 })
-&lt;/script&gt;
+</script>
 
-&lt;style scoped&gt;
+<style scoped>
 .order-stats {
   padding: 20px;
 }
@@ -200,4 +200,4 @@ onUnmounted(() => {
 .card-header {
   font-weight: bold;
 }
-&lt;/style&gt;
+</style>
